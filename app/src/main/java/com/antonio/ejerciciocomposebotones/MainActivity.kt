@@ -21,9 +21,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material.TextField
+
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,7 +53,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //EjComposeBotones()
-                    EjComposeBotones2()
+                    //EjComposeBotones2()
+                    CalculadoraSumas()
                 }
             }
         }
@@ -251,6 +256,43 @@ fun EjComposeBotones2() {
             Text(text = "ButtonEnBox", fontSize = 22.sp)
         }
     }
+
+}
+
+
+
+
+
+
+
+@Composable
+fun CalculadoraSumas() {
+    var number1 by rememberSaveable {mutableStateOf("0")}
+    var number2 by rememberSaveable {mutableStateOf("0")}
+    var num1:int=number1
+    var num2=number2
+    var suma=0
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        TextField(
+            value = number1,
+            onValueChange = { number1 = it },
+            label = { androidx.compose.material.Text("Operador 1") }
+        )
+
+        TextField(
+            value = number2,
+            onValueChange = { number2 = it },
+            label = { androidx.compose.material.Text("Operador 2") }
+        )
+        Text(text = "Suma = 0" )
+        
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Calcular")
+        }
+    }
+
+
 
 }
 
