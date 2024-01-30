@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,12 +17,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Icon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 
 
 import androidx.compose.runtime.Composable
@@ -232,10 +236,10 @@ fun EjComposeBotones2() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val context = LocalContext.current
-        Button(colors = ButtonDefaults.buttonColors(Color(103,80,164)),
+        Button(colors = ButtonDefaults.buttonColors(Color(103, 80, 164)),
             onClick = {
-            showToast("ButtonConButton", context)
-        }) {
+                showToast("ButtonConButton", context)
+            }) {
             Text(text = "ButtonConButton")
         }
         Button(modifier = Modifier.border(4.dp, Color.Blue, shape = CircleShape),
@@ -248,10 +252,10 @@ fun EjComposeBotones2() {
         }
         Button(
 
-            colors=ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color.Green),
             onClick = {
-            showToast("ButtonEnBox", context)
-        }
+                showToast("ButtonEnBox", context)
+            }
         ) {
             Text(text = "ButtonEnBox", fontSize = 22.sp)
         }
@@ -259,42 +263,78 @@ fun EjComposeBotones2() {
 
 }
 
+@Composable
+fun BotonesConIcono() {
+    Column (horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly){
+        Text(text = "Botones con Icono", fontSize = 30.sp)
+        Row {
+            Icon(Icons.Default.ShoppingCart , contentDescription ="Carrito", tint = Color.Blue )
+            Text(text = " BOTÓN" )
+        }
+        Button(onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(Color.White), border = BorderStroke(2.dp,Color.Black)) {
+            Icon(Icons.Default.ShoppingCart , contentDescription ="Carrito", tint=Color.Blue )
+            Text(text = " BOTÓN", color = Color.Blue )
+        }
 
+        Button(onClick = { /*TODO*/ }) {
+            Icon(Icons.Default.ShoppingCart , contentDescription ="Carrito", tint=Color.White )
+            Text(text = " BOTÓN" )
+        }
 
-
-
+    }
+}
 
 
 @Composable
 fun CalculadoraSumas() {
-    var number1 by rememberSaveable {mutableStateOf("0")}
-    var number2 by rememberSaveable {mutableStateOf("0")}
-    var num1:int=number1
-    var num2=number2
-    var suma=0
+    val context = LocalContext.current
+    var number1 by rememberSaveable { mutableStateOf("0") }
+    var number2 by rememberSaveable { mutableStateOf("0") }
+    var suma by rememberSaveable { mutableStateOf("0.0") }
+    var num1 = 0.0
+    var num2 = 0.0
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    try {
+        num1 = number1.toDouble()
+        num2 = number2.toDouble()
+    } catch (e: NumberFormatException) {
+        if(!(number1=="" || number2=="")){
+            showToast("Solo Numeros",context)
+        }
+
+    }
+
+
+
+    Column(modifier=Modifier.padding(top=50.dp),horizontalAlignment = Alignment.CenterHorizontally) {
         TextField(
             value = number1,
             onValueChange = { number1 = it },
-            label = { androidx.compose.material.Text("Operador 1") }
+            label = { Text("Número 1") }
         )
 
         TextField(
             value = number2,
             onValueChange = { number2 = it },
-            label = { androidx.compose.material.Text("Operador 2") }
+            label = { Text("Número 2") }
         )
-        Text(text = "Suma = 0" )
-        
-        Button(onClick = { /*TODO*/ }) {
+        Text(text = "Suma = $suma", color = Color.Cyan, fontSize = 36.sp
+        )
+
+        Button(onClick = {
+            suma = (num1 + num2).toString()
+
+        }) {
             Text(text = "Calcular")
+
+
         }
     }
 
 
-
 }
+
+
 
 private fun showToast(string: String, context: Context) {
 
@@ -315,6 +355,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     EjercicioComposeBotonesTheme {
-        EjComposeBotones2()
+        BotonesConIcono()
     }
 }
