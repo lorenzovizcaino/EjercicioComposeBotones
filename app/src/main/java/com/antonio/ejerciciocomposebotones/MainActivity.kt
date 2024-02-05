@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -43,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -61,7 +63,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //EjComposeBotones()
                     //EjComposeBotones2()
-                    CalculadoraSumas()
+                    //CalculadoraSumas()
+
+
+                    CalculadoraSumas2()
                 }
             }
         }
@@ -268,20 +273,27 @@ fun EjComposeBotones2() {
 
 @Composable
 fun BotonesConIcono() {
-    Column (horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly){
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
         Text(text = "Botones con Icono", fontSize = 30.sp)
         Row {
-            Icon(Icons.Default.ShoppingCart , contentDescription ="Carrito", tint = Color.Blue )
-            Text(text = " BOTÓN" )
+            Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito", tint = Color.Blue)
+            Text(text = " BOTÓN")
         }
-        Button(onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(Color.White), border = BorderStroke(2.dp,Color.Black)) {
-            Icon(Icons.Default.ShoppingCart , contentDescription ="Carrito", tint=Color.Blue )
-            Text(text = " BOTÓN", color = Color.Blue )
+        Button(
+            onClick = { /*TODO*/ },
+            colors = ButtonDefaults.buttonColors(Color.White),
+            border = BorderStroke(2.dp, Color.Black)
+        ) {
+            Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito", tint = Color.Blue)
+            Text(text = " BOTÓN", color = Color.Blue)
         }
 
         Button(onClick = { /*TODO*/ }) {
-            Icon(Icons.Default.ShoppingCart , contentDescription ="Carrito", tint=Color.White )
-            Text(text = " BOTÓN" )
+            Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito", tint = Color.White)
+            Text(text = " BOTÓN")
         }
 
     }
@@ -292,9 +304,10 @@ fun BotonesConIcono() {
 @Composable
 fun CalculadoraSumas() {
     val context = LocalContext.current
-    var number1 by rememberSaveable { mutableStateOf("0") }
-    var number2 by rememberSaveable { mutableStateOf("0") }
+    var number1 by rememberSaveable { mutableStateOf("") }
+    var number2 by rememberSaveable { mutableStateOf("") }
     var suma by rememberSaveable { mutableStateOf("0.0") }
+    var color by remember { mutableStateOf(Color.Black) }
     var num1 = 0.0
     var num2 = 0.0
 
@@ -302,31 +315,42 @@ fun CalculadoraSumas() {
         num1 = number1.toDouble()
         num2 = number2.toDouble()
     } catch (e: NumberFormatException) {
-        if(!(number1=="" || number2=="")){
-            showToast("Solo Numeros",context)
+        if (!(number1 == "" || number2 == "")) {
+            showToast("Solo Numeros", context)
         }
 
     }
 
 
 
-    Column(modifier=Modifier.padding(top=50.dp),horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.padding(top = 50.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         TextField(
             value = number1,
             onValueChange = { number1 = it },
-            label = { Text("Número 1") }
+            label = { Text("Número 1") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
         TextField(
             value = number2,
             onValueChange = { number2 = it },
-            label = { Text("Número 2") }
+            label = { Text("Número 2") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
-        Text(text = "Suma = $suma", color = Color.Cyan, fontSize = 36.sp
+        Text(
+            text = "Suma = $suma", color = color, fontSize = 36.sp
         )
 
         Button(onClick = {
             suma = (num1 + num2).toString()
+            when {
+                suma.toDouble() > 25 -> color = Color.Cyan
+                suma.toDouble() < 25 -> color = Color.Blue
+                else -> color = Color.Red
+            }
 
         }) {
             Text(text = "Calcular")
@@ -338,6 +362,65 @@ fun CalculadoraSumas() {
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CalculadoraSumas2() {
+
+    val context = LocalContext.current
+    var number1 by rememberSaveable { mutableStateOf("") }
+    var number2 by rememberSaveable { mutableStateOf("") }
+    var suma by rememberSaveable { mutableStateOf("0.0") }
+    var color by remember { mutableStateOf(Color.Black) }
+    var num1 = 0.0
+    var num2 = 0.0
+
+    try {
+        num1 = number1.toDouble()
+        num2 = number2.toDouble()
+    } catch (e: NumberFormatException) {
+        if (!(number1 == "" || number2 == "")) {
+            showToast("Solo Numeros", context)
+        }
+
+    }
+
+    Column(
+        modifier = Modifier.padding(top = 50.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        myTextField(number1, { number1 = it }, "Numero 1")
+        myTextField(number2, { number2 = it }, "Numero 2")
+        Text(
+            text = "Suma = $suma", color = color, fontSize = 36.sp
+        )
+
+        Button(onClick = {
+            suma = (num1 + num2).toString()
+            when {
+                suma.toDouble() > 25 -> color = Color.Cyan
+                suma.toDouble() < 25 -> color = Color.Blue
+                else -> color = Color.Red
+            }
+
+        }) {
+            Text(text = "Calcular")
+
+
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun myTextField(number: String, function: (String) -> Unit, operando: String) {
+    TextField(
+        value = number,
+        onValueChange = function,
+        label = { Text(operando) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
+}
 
 
 private fun showToast(string: String, context: Context) {
